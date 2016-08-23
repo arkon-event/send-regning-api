@@ -37,13 +37,13 @@ class ApiClient
     const API_BASE_URL = 'https://www.sendregning.no/';
 
     /**
-     * 
-     * @param string $username
-     * @param string $password
-     * @param string $sendRegningAccountId
-     * @param string $version
-     * @param string $baseUrl
-     * @param array $additionalHttpOptions
+     *
+     * @param string $username            
+     * @param string $password            
+     * @param string $sendRegningAccountId            
+     * @param string $version            
+     * @param string $baseUrl            
+     * @param array $additionalHttpOptions            
      */
     public function __construct($username, $password, $sendRegningAccountId, $version = self::VERSION_LATEST, $baseUrl = self::API_BASE_URL, array $additionalHttpOptions = [])
     {
@@ -72,13 +72,18 @@ class ApiClient
      * Post data to the API using a standard object ready for json_encoding
      *
      * @param string $path            
-     * @param \stdClass $data            
+     * @param \stdClass|array $data            
      */
-    public function post($path, \stdClass $data)
+    public function post($path,  $data = null)
     {
-        $this->client->request('POST', $path, [
-            RequestOptions::JSON => $data
-        ]);
+        if (! is_null($data)) {
+            $options = [
+                RequestOptions::JSON => $data
+            ];
+        } else {
+            $options = [];
+        }
+        $this->client->request('POST', $path, $options);
     }
 
     /**
