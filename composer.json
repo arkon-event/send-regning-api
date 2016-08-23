@@ -1,9 +1,9 @@
 {
-    "name": "arkon-event/sendRegningAPI",
+    "name": "arkon-event/send-regning-api",
     "license": "MIT",
     "type": "library",
     "description": "PHP client for using SendRegning API",
-    "homepage": "https://github.com/arkon-event/sendRegningAPI",
+    "homepage": "https://github.com/arkon-event/send-regning-api",
     "autoload": {
         "psr-4" : {
             "ArkonEvent\\SendRegningApi\\" : "src"
