@@ -1,6 +1,6 @@
 # sendregning.no PHP API Client
 
-This is a very simple PHP HTTP wrapper for working with Sendregning.no's API. It takes care of structuring headers/authentication and correctly and allows an easy way to send messages to the API. It does not help you build JSON messages or validate them. See the SendRegning documentation for that http://sendregning.github.io/
+This is a simple PHP HTTP wrapper for working with Sendregning.no's API. It takes care of structuring headers/authentication and allows an easy way to send messages to the API. It does not help you build JSON messages or validate them. See the SendRegning documentation for that http://sendregning.github.io/
 
 This client was built for arkon.no's internal integration with sendregning.no, and is used by our production system. We are not affiliated with sendregning.no in any other way.
 
