@@ -74,7 +74,7 @@ class ApiClient
      * @param string $path            
      * @param \stdClass|array $data            
      */
-    public function post($path,  $data = null)
+    public function post($path, $data = null)
     {
         if (! is_null($data)) {
             $options = [
