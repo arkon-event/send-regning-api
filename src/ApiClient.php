@@ -1,7 +1,8 @@
 <?php
 namespace ArkonEvent\SendRegningApi;
 
-use \GuzzleHttp\RequestOptions;
+use GuzzleHttp\RequestOptions;
+use ArkonEvent\SendRegningApi\SendRegningApiException;
 
 /**
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -36,6 +37,32 @@ class ApiClient
 
     const API_BASE_URL = 'https://www.sendregning.no/';
 
+    const LINK_OFFER = 'offer';
+
+    const LINK_ORDER_CONFIRMATION = 'orderConfirmation';
+
+    const LINK_PDF = 'pdf';
+
+    const LINK_SEND_AGAIN = 'sendAgain';
+
+    const LINK_SEND_CREDIT_NOTE = 'sendCreditNote';
+
+    const LINK_COLLECTION = 'collection';
+
+    const LINK_SEND_DUNNING = 'sendDunning';
+
+    const LINK_REGISTER_PAYMENT = 'registerPayment';
+
+    const LINK_SEND_TO_DEBT_COLLECTION = 'sendToDebtCollection';
+
+    const LINK_CANCEL_A_GIRO_REQUEST = 'cancelAgiroRequest';
+
+    const LINK_CANCEL_COLLECTION = 'cancelCollection';
+
+    const LINK_INVOICE_DUNNINGS = 'invoiceDunnings';
+
+    const LINK_DEBT_COLLECTION_NOTICE = 'debtCollectionNotice';
+
     /**
      *
      * @param string $username            
@@ -45,7 +72,7 @@ class ApiClient
      * @param string $baseUrl            
      * @param array $additionalHttpOptions            
      */
-    public function __construct($username, $password, $sendRegningAccountId, $version = self::VERSION_LATEST, $baseUrl = self::API_BASE_URL, array $additionalHttpOptions = [])
+    public function __construct($username, $password, $sendRegningAccountId, $apiVersion = self::VERSION_LATEST, $baseUrl = self::API_BASE_URL, array $additionalHttpOptions = [])
     {
         $httpOptions = [
             'base_uri' => $baseUrl,
@@ -61,8 +88,8 @@ class ApiClient
         
         $httpOptions = array_merge($httpOptions, $additionalHttpOptions);
         
-        if ($version != self::VERSION_LATEST) {
-            $httpOptions[RequestOptions::HEADERS]['API-Version'] = $version;
+        if ($apiVersion != self::VERSION_LATEST) {
+            $httpOptions[RequestOptions::HEADERS]['API-Version'] = $apiVersion;
         }
         
         $this->client = new \GuzzleHttp\Client($httpOptions);
@@ -90,7 +117,7 @@ class ApiClient
      * Get data from API, returned as json_decoded object if $returnJsonAsString is not set to true
      *
      * @param string $path            
-     * @param string $returnJsonAsString            
+     * @param bool $returnJsonAsString            
      * @return string|mixed
      */
     public function get($path, $returnJsonAsString = false)
@@ -101,6 +128,32 @@ class ApiClient
         if (! $returnJsonAsString) {
             $data = json_decode($data);
         }
+        return $data;
+    }
+
+    /**
+     * Call a link from a sendregning API response, will either return json or string depending on return format of sendregning API
+     *
+     * @param \stdClass $data            
+     * @param string $linkName            
+     * @param bool $returnJsonAsString            
+     * @throws SendRegningApiException
+     * @return string|\stdClass
+     */
+    public function callLink(\stdClass $data, $linkName, $returnJsonAsString = false)
+    {
+        if (! isset($data->{'_links'}->$linkName->uri)) {
+            throw new SendRegningApiException('Link not found: ' . $linkName);
+        }
+        
+        $path = $data->{'_links'}->$linkName->uri;
+        
+        if ($linkName == self::LINK_PDF) {
+            $responseData = $this->client->getConfig('base_uri') . $path;
+        } else {
+            $responseData = $this->get($path, $returnJsonAsString);
+        }
+        
         return $data;
     }
 }

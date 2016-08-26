@@ -12,6 +12,12 @@ $client = new ApiClient('loginEmail', 'password', 'account-id');
 //To execute a get request simply use get and add the path
 $invoices = $client->get('/invoices/');
 
+//or to get a single invoice
+$invoice = $client->get('/invoices/14');
+
+//use the callLink method to call links returned in the object
+$pdf = $client->callLink($invoice,'pdf');
+
 //To send a POST request without body, http client will throw exception if response is not 200
 $client->post('/recipients/123456/available');
 
