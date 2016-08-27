@@ -154,6 +154,6 @@ class ApiClient
             $responseData = $this->get($path, $returnJsonAsString);
         }
         
-        return $data;
+        return $responseData;
     }
 }
