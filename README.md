@@ -16,7 +16,7 @@ $invoices = $client->get('/invoices/');
 $invoice = $client->get('/invoices/14');
 
 //use the callLink method to call links returned in the object
-$pdf = $client->callLink($invoice,'pdf');
+$pdf = $client->callLink($invoice,ApiClient::LINK_PDF);
 
 //To send a POST request without body, http client will throw exception if response is not 200
 $client->post('/recipients/123456/available');
