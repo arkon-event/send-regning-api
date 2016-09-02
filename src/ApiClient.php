@@ -41,8 +41,6 @@ class ApiClient
 
     const LINK_ORDER_CONFIRMATION = 'orderConfirmation';
 
-    const LINK_PDF = 'pdf';
-
     const LINK_SEND_AGAIN = 'sendAgain';
 
     const LINK_SEND_CREDIT_NOTE = 'sendCreditNote';
@@ -77,8 +75,7 @@ class ApiClient
         $httpOptions = [
             'base_uri' => $baseUrl,
             RequestOptions::HEADERS => [
-                'Originator-Id' => $sendRegningAccountId,
-                'Accept' => 'application/json'
+                'Originator-Id' => $sendRegningAccountId
             ],
             RequestOptions::AUTH => [
                 $username,
@@ -117,12 +114,17 @@ class ApiClient
      * Get data from API, returned as json_decoded object if $returnJsonAsString is not set to true
      *
      * @param string $path            
+     * @param array $queryParameters            
      * @param bool $returnJsonAsString            
      * @return string|mixed
      */
-    public function get($path, $returnJsonAsString = false)
+    public function get($path, array $queryParameters = [], $returnJsonAsString = false)
     {
-        $response = $this->client->request('GET', $path);
+        $options = [];
+        if (! empty($queryParameters)) {
+            $options[RequestOptions::QUERY] = $queryParameters;
+        }
+        $response = $this->client->request('GET', $path, $options);
         
         $data = (string) $response->getBody();
         if (! $returnJsonAsString) {

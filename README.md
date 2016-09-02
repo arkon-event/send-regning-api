@@ -15,10 +15,14 @@ $invoices = $client->get('/invoices/');
 //or to get a single invoice
 $invoice = $client->get('/invoices/14');
 
-//use the callLink method to call links returned in the object
-$pdf = $client->callLink($invoice,ApiClient::LINK_PDF);
+//use $queryParameters to send parameters
+$params = ['from' => '2015-02-01','to' => '2015-06-01'];
+$invoice = $client->get('/invoices/not-due',$params);
 
-//To send a POST request without body, http client will throw exception if response is not 200
+//use the callLink method to call links returned in the object
+$client->callLink($invoice,ApiClient::LINK_SEND_AGAIN);
+
+//To send a POST request without body
 $client->post('/recipients/123456/available');
 
 //To send a POST request with a body, data must be provided in format supported as input for json_encode 
